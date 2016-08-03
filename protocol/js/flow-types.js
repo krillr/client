@@ -498,7 +498,6 @@ export type GUIEntryArg = {
 }
 
 export type GUIEntryFeatures = {
-  storeSecret: Feature;
   showTyping: Feature;
 }
 
@@ -1113,7 +1112,6 @@ export type SecretEntryArg = {
   cancel: string;
   ok: string;
   reason: string;
-  useSecretStore: boolean;
   showTyping: boolean;
 }
 

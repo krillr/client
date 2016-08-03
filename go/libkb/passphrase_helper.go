@@ -27,7 +27,6 @@ func GetSecret(g *GlobalContext, ui SecretUI, title, prompt, retryMsg string, al
 	// apparently allowSecretStore can be true even though HasSecretStore()
 	// is false (in the case of mocked secret store tests on linux, for
 	// example). So, pass this through:
-	arg.Features.StoreSecret.Allow = allowSecretStore
 	return GetPassphraseUntilCheckWithChecker(g, arg, newUIPrompter(ui), &CheckPassphraseSimple)
 }
 
@@ -40,8 +39,6 @@ func GetPaperKeyPassphrase(g *GlobalContext, ui SecretUI, username string) (stri
 	}
 	arg.Prompt = fmt.Sprintf("Please enter a paper key for %s", username)
 	arg.Username = username
-	arg.Features.StoreSecret.Allow = false
-	arg.Features.StoreSecret.Readonly = true
 	arg.Features.ShowTyping.Allow = true
 	arg.Features.ShowTyping.DefaultValue = true
 	res, err := GetPassphraseUntilCheck(g, arg, newUIPrompter(ui), &PaperChecker{})
@@ -58,8 +55,6 @@ func GetPaperKeyForCryptoPassphrase(g *GlobalContext, ui SecretUI, reason string
 	arg := DefaultPassphraseArg(g, false)
 	arg.WindowTitle = "Paper Key"
 	arg.Type = keybase1.PassphraseType_PAPER_KEY
-	arg.Features.StoreSecret.Allow = false
-	arg.Features.StoreSecret.Readonly = true
 	arg.Features.ShowTyping.Allow = true
 	arg.Features.ShowTyping.DefaultValue = true
 	if len(devices) == 1 {
@@ -136,17 +131,7 @@ func DefaultPassphraseArg(g *GlobalContext, allowSecretStore bool) keybase1.GUIE
 				Readonly:     true,
 				Label:        "Show typing",
 			},
-			StoreSecret: keybase1.Feature{
-				Allow:        allowSecretStore,
-				DefaultValue: false,
-				Readonly:     false,
-				Label:        "Save in Keychain",
-			},
 		},
-	}
-
-	if g.SecretStoreAll != nil {
-		arg.Features.StoreSecret.Label = g.SecretStoreAll.GetApprovalPrompt()
 	}
 
 	return arg
