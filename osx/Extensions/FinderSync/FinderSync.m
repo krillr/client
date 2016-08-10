@@ -36,6 +36,14 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
   // The user is now seeing the container's contents.
   // If they see it in more than one view at a time, we're only told once.
   DDLogInfo(@"beginObservingDirectoryAtURL:%@", URL.filePathURL);
+
+  NSString *metrics = [[URL path] stringByAppendingPathComponent:@".kbfs_metrics"];
+  NSError *error = nil;
+  NSString *metricsContents = [[NSString alloc] initWithContentsOfFile:metrics encoding:NSUTF8StringEncoding error:&error];
+  if (error) {
+    DDLogError(@"Error reading metrics for %@: %@", [URL path], error);
+  }
+  DDLogInfo(@"Metrics [%@]", @(metricsContents.length));
 }
 
 - (void)endObservingDirectoryAtURL:(NSURL *)URL {
@@ -50,7 +58,6 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
   }];
 }
 
-/*
 #pragma mark Menu/Toolbar
 
 - (NSString *)toolbarItemName {
@@ -75,12 +82,11 @@ static const DDLogLevel ddLogLevel = DDLogLevelDebug;
   NSURL *target = [[FIFinderSyncController defaultController] targetedURL];
   NSArray *items = [[FIFinderSyncController defaultController] selectedItemURLs];
 
-  KBLog(@"%@, target: %@, items:", [sender title], [target filePathURL]);
+  DDLogDebug(@"%@, target: %@, items:", [sender title], [target filePathURL]);
   [items enumerateObjectsUsingBlock: ^(id obj, NSUInteger idx, BOOL *stop) {
-    KBLog(@" %@", [obj filePathURL]);
+    DDLogDebug(@" %@", [obj filePathURL]);
   }];
 }
- */
 
 @end
 
