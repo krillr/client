@@ -58,12 +58,12 @@ export function stopTimer (): Action {
 export function registerTrackerChangeListener (): TrackerActionCreator {
   return (dispatch, getState) => {
     const params = {
-      'keybase.1.NotifyTracking.trackingChanged': ({username}) => {
+      'keybase.1.NotifyTracking.trackingChanged': _.debounce(({username}) => {
         const trackerState = getState().tracker.trackers[username]
         if (trackerState && trackerState.type === 'tracker') {
           dispatch(getProfile(username))
         }
-      },
+      }, 2000, {leading: true}),
     }
 
     engine.listenGeneralIncomingRpc(params)
