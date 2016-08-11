@@ -779,6 +779,18 @@ export type NotificationChannels = {
   app: boolean,
 }
 
+export type NotifyChatNewChatMessageRpcParam = $Exact<{
+  uid: UID,
+  msg: Message
+}>
+
+export function NotifyChatNewChatMessageRpc (request: $Exact<{
+  param: NotifyChatNewChatMessageRpcParam,
+  waitingHandler?: (waiting: boolean, method: string, sessionID: string) => void,
+  incomingCallMap?: incomingCallMapType,
+  callback?: (null | (err: ?any) => void)}>) {
+  engine.rpc({...request, method: 'NotifyChat.newChatMessage'})
+}
 export type NotifyFSFSActivityRpcParam = $Exact<{
   notification: FSNotification
 }>
@@ -3939,6 +3951,7 @@ export type rpc =
   | Kex2ProvisioneeHelloRpc
   | Kex2ProvisionerKexStartRpc
   | NotifyAppExitRpc
+  | NotifyChatNewChatMessageRpc
   | NotifyFSFSActivityRpc
   | NotifyFSFSEditListResponseRpc
   | NotifyFSRequestFSEditListRequestRpc
@@ -5414,6 +5427,14 @@ export type incomingCallMapType = $Exact<{
       error: (err: RPCError) => void,
       result: () => void
     }
+  ) => void,
+  'keybase.1.NotifyChat.newChatMessage'?: (
+    params: $Exact<{
+      uid: UID,
+      msg: Message
+    }> /* ,
+    response: {} // Notify call
+    */
   ) => void,
   'keybase.1.notifyCtl.setNotifications'?: (
     params: $Exact<{

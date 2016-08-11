@@ -268,6 +268,8 @@ export const metadataUpdate = {}
 
 export const NotifyApp = {}
 
+export const NotifyChat = {}
+
 export const notifyCtl = {}
 
 export const NotifyFavorites = {}
@@ -507,6 +509,7 @@ export default {
   metadata,
   metadataUpdate,
   NotifyApp,
+  NotifyChat,
   notifyCtl,
   NotifyFavorites,
   NotifyFS,
